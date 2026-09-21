@@ -1,0 +1,8 @@
+{
+  "name": "gh-harness",
+  "displayName": "GitHub Harness — modes de travail",
+  "version": "0.1.0",
+  "description": "Harnais de gestion de projet 100% GitHub : le wiki est la doc, les issues sont les tickets, le repo est la codebase. Sept modes de travail cloisonnés (INITIALISATION, DESIGN, MANAGER, CODE, ORCHESTRATOR, ITERATION, LIBRE), déclarés en cours de session.",
+  "keywords": ["github", "wiki", "issues", "process", "modes", "workflow"],
+  "license": "MIT"
+}
