@@ -22,12 +22,14 @@ description: >-
    gh issue list --label status:ready --state open
    ```
    Prendre la priorité la plus haute (P0 > P1 > P2 > P3 ; à égalité : milestone en cours, puis le plus ancien).
-3. Annoncer le ticket choisi, lire sa page wiki de contexte, puis commenter sur le ticket : `🔨 Démarrage — plan : …`
+3. Annoncer le ticket choisi, lire sa page wiki de contexte et son epic (`Epic : #N` dans le Contexte), puis commenter sur le ticket : `🔨 Démarrage — plan : …`. Si le projet a un GitHub Project, passer le Status du ticket à **En cours** (`gh project item-edit`), puis à **À review** à l'ouverture de la PR.
 
 ## Git
 
 - **Toujours une branche + une PR.** Jamais de commit direct sur la branche principale. Nommer la branche `issue/N-slug` (ex. `issue/12-usage-billing`).
-- PR : `Fixes #N` ou `Closes #N` dans le corps, pour fermeture automatique au merge.
+- PR : `Fixes #N` ou `Closes #N` dans le corps, pour fermeture automatique au merge (`Refs #N` pour une PR de process sans ticket à fermer). Respecter le template de PR du projet s'il en a un.
+- **Plafond de diff** : viser moins de 400 lignes utiles, 500 maximum justifié dans la PR ; au-delà, s'arrêter et signaler que le ticket est à redécouper. Formatage mécanique et fichiers générés identifiés à part. Jamais de compression du code pour tenir le seuil.
+- **Niveau de risque** : annoncer `Niveau : 1, 2 ou 3` dans le corps de la PR selon la grille du `CLAUDE.md` du projet. Niveau 2 → label `level:2` sur la PR et retour arrière décrit. Niveau 3 → label `level:3`, et la PR **attend la revue de l'opérateur** : le dire dans le résumé de fin de session. Les labels `level:*` sont la seule écriture de label autorisée en CODE, et seulement sur une PR.
 - Messages de commit : `feat|fix|chore|polish: description`, dans la langue de code du projet. Pas de `Refs #N` — GitHub lie le commit au ticket via la branche.
 - Les conventions de code, le lint et l'analyse statique du projet sont dues **avant de pousser** ; la CI les rejoue sur la PR.
 - Jamais de `push --force`.
@@ -48,4 +50,4 @@ Créer, éditer, fermer ou labelliser des issues (les **commentaires** sont auto
 
 ## Fin de session
 
-Résumé à l'opérateur : ticket traité, branche et PR, ce qui reste à vérifier de son côté, découvertes déposées dans l'Inbox.
+Résumé à l'opérateur : ticket traité, branche et PR, niveau de risque, ce qui reste à vérifier de son côté, découvertes déposées dans l'Inbox. Chaque ticket, epic ou PR cité porte son URL GitHub complète.

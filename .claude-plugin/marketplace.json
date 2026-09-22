@@ -5,13 +5,13 @@
     "url": "https://github.com/PaulThiberville"
   },
   "description": "Harnais de gestion de projet agentique reposant entièrement sur GitHub.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "plugins": [
     {
       "name": "gh-harness",
       "source": "./",
       "description": "Sept modes de travail cloisonnés pour piloter un projet dont le wiki est la doc, les issues sont les tickets et le repo est la codebase.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "workflow",
       "keywords": ["github", "wiki", "issues", "process", "modes"]
     }
