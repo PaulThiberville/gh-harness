@@ -52,7 +52,7 @@ done
 OWNER=${REPO%%/*}
 INBOX_TITLE="📥 Inbox — Triage"
 
-run() { if ((DRY)); then echo "+ $*"; else "$@"; fi; }
+run() { if ((DRY)); then echo "  + $*" >&2; else "$@"; fi; }
 log() { echo "  $*"; }
 
 # ---------- issues : lecture par la liste, jamais par la recherche ---------------
