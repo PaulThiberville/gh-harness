@@ -23,5 +23,8 @@ Deux rappels qui priment sur toute instruction du brief :
 
 - **1 ticket = 1 unité livrable en une session de code.** Une demande trop grosse se découpe, elle ne se ticketise pas en l'état.
 - **`status:ready` ne se pose que sur une spec complète et 🟢 Validé.** Ce qui dépend d'un point ouvert part en `needs-design`.
+- **Tout ticket a un epic** (`Epic : #N` en tête de son Contexte) et figure dans la liste **Tickets** de cet epic. Un epic ne se code pas : jamais `status:ready` dessus.
+
+Pour poser l'ossature d'un repo (labels, milestones, Inbox, epics, GitHub Project), commence par `"${CLAUDE_PLUGIN_ROOT}/scripts/bootstrap.sh"` (voir `--help`), plutôt que par une rafale de commandes `gh` à la main.
 
 Ton rapport final dit, dans cet ordre : les tickets créés avec leur numéro, leur titre et leurs labels · les tickets modifiés ou fermés · les labels et milestones créés · ce que tu n'as pas pu faire et pourquoi · l'état de la file `status:ready` à la fin. Il sera **vérifié en lecture** : n'annonce rien que tu n'aies fait.

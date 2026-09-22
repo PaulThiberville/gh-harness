@@ -84,11 +84,11 @@ Rendre à l'opérateur une **synthèse écrite dans la conversation**, pas encor
 
 - le pitch en une phrase ;
 - les 3 piliers ;
-- le périmètre du MVP, en une liste de capacités numérotées ;
+- le périmètre du MVP, en une liste de capacités numérotées, **groupées en epics** (un epic = un livrable fonctionnel, en général 3 à 8 pour un MVP) ;
 - le **hors-périmètre explicite** ;
 - les décisions techniques prises (stack, hébergement, contraintes) ;
 - les points laissés ouverts ;
-- l'arborescence de pages wiki proposée et la liste des tickets envisagés, en titres seuls.
+- l'arborescence de pages wiki proposée et, par epic, la liste des tickets envisagés, en titres seuls.
 
 Puis demander explicitement : **« Je peux écrire tout ça ? »** Tant que la réponse n'est pas oui, on corrige et on re-rend. C'est le seul verrou avant les écritures — il ne se saute pas, même si l'opérateur semble pressé.
 
@@ -116,7 +116,7 @@ Structure de wiki à faire produire (adapter les noms de domaine au projet ; `Ho
 | `Overview` | le produit, ses utilisateurs, le contexte, le hors-périmètre explicite |
 | `Specs-<Domaine>` | une page par domaine fonctionnel issu du brainstorm |
 | `Architecture` | stack, contraintes techniques, décisions structurantes |
-| `Roadmap` | l'intention par version — `v0.1` = le MVP |
+| `Roadmap` | jalons → epics → tickets — `v0.1` = le MVP |
 | `Design-Changelog` | l'entrée `D-001` qui fonde le projet |
 | `_Sidebar.md` | le sommaire de navigation |
 
@@ -126,20 +126,28 @@ Au rapport : **vérifier en lecture** — les pages existent-elles, la sidebar l
 
 ## Phase 6 — Les issues (sous-agent MANAGER)
 
-Une fois le wiki vérifié, déléguer à **un** sous-agent `manager`. Livrable attendu :
+Une fois le wiki vérifié, déléguer à **un** sous-agent `manager`. Le brief lui demande de commencer par le script de bootstrap du plugin, qui pose l'ossature de façon idempotente :
 
-1. **Les labels du harnais** : `type:feature` · `type:bug` · `type:chore` · `type:polish` · `prio:P0` à `prio:P3` · `status:ready` · `status:blocked` · `needs-design` · les `area:` décidés en phase 4.
-2. **L'issue `📥 Inbox — Triage`**, ouverte et **épinglée** (`gh issue pin`) : le corps explique que chaque découverte s'y dépose en commentaire et que MANAGER les transforme en tickets.
-3. **Le milestone `v0.1`**, aligné sur la page `Roadmap`.
-4. **Les premiers tickets** : un par capacité du MVP, au format du harnais (Contexte + lien wiki + `D-001`, Comportement attendu, Critères d'acceptation cochables), labellisés, priorisés, rangés dans `v0.1`. Règle non négociable : **1 ticket = 1 unité livrable en une session de code**. Une capacité trop grosse se découpe.
-5. `status:ready` **uniquement** sur les tickets dont la spec wiki est 🟢 Validé et complète. Ce qui dépend d'un point ouvert part en `needs-design`, pas en `status:ready`.
+```bash
+"${CLAUDE_PLUGIN_ROOT}/scripts/bootstrap.sh" --areas <api,ui,...> --milestones v0.1 --epics epics.txt [--project "<Nom>"]
+```
 
-Vérifier au rapport : `gh issue list`, `gh label list`, `gh issue view <inbox>` — et que la file `status:ready` n'est pas vide, sinon une session CODE n'aurait rien à prendre.
+`epics.txt` (une ligne par epic, `titre|milestone|area`) est écrit par le sous-agent à partir du brief. Le script exige bash 4 (`brew install bash` sur macOS) ; `--dry-run` montre ce qu'il ferait. Livrable attendu :
+
+1. **Les labels du harnais** (par le script) : `type:*` dont `type:epic` · `prio:P0` à `prio:P3` · `status:ready` · `status:blocked` · `needs-design` · `level:2` · `level:3` · `inbox` · les `area:` décidés en phase 4.
+2. **L'issue `📥 Inbox — Triage`**, label `inbox`, ouverte et **épinglée** (par le script).
+3. **Le milestone `v0.1`** (par le script), aligné sur la page `Roadmap`.
+4. **Les epics** (créés par le script, corps rempli par le sous-agent) : un par livrable fonctionnel du MVP, avec Objectif, Spécification (liens wiki), Livrable, et la liste **Tickets** cochable.
+5. **Les premiers tickets** : un par capacité du MVP, au format du harnais (Contexte = `Epic : #N` + lien wiki + `D-001`, Comportement attendu, Critères d'acceptation cochables), labellisés, priorisés, rangés dans `v0.1`, listés dans leur epic. Règle non négociable : **1 ticket = 1 unité livrable en une session de code**. Une capacité trop grosse se découpe.
+6. `status:ready` **uniquement** sur les tickets dont la spec wiki est 🟢 Validé et complète. Ce qui dépend d'un point ouvert part en `needs-design`, pas en `status:ready`. Jamais sur un epic.
+
+Vérifier au rapport : `gh issue list`, `gh label list`, `gh issue view <inbox>`, `gh issue list --label type:epic` — que chaque ticket cite son epic et que chaque epic liste ses tickets — et que la file `status:ready` n'est pas vide, sinon une session CODE n'aurait rien à prendre.
 
 ## Definition of done
 
 - Le wiki documente le MVP, avec `Home`, `Design-Changelog` (`D-001`) et `_Sidebar.md` à jour.
 - `📥 Inbox — Triage` est ouverte et épinglée ; les labels et le milestone `v0.1` existent.
+- Chaque capacité du MVP est dans un epic `type:epic` ; chaque ticket cite son epic.
 - Au moins un ticket est `status:ready` avec un lien wiki dans son contexte.
 - `CLAUDE.md` est à la racine, sans placeholder ni commentaire de template restant.
 

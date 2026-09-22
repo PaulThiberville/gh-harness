@@ -1,0 +1,7 @@
+# Fichier d'epics pour scripts/bootstrap.sh --epics
+# Une ligne par epic : titre|milestone|area   (area facultatif ; le préfixe « Epic — » est ajouté)
+# Les virgules sont acceptées dans le titre. Les lignes vides et les lignes # sont ignorées.
+Socle technique|v0.1|infra
+Carte et découverte|v0.2|ui
+Filtres, recherche et recommandation|v0.2|api
+Compte et profil|v0.3|ui

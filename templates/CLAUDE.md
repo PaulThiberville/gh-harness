@@ -22,6 +22,8 @@ Le CLI `gh` est authentifié ; git passe par HTTPS.
 
 **Vocabulaire** — l'**opérateur** est la personne qui pilote le harnais : elle seule déclare le mode, valide les specs et merge les PR. L'**agent** est Claude. Ce fichier s'adresse à l'agent.
 
+Le backlog a **trois niveaux** : le **jalon** (milestone GitHub, une version testable), l'**epic** (une issue `type:epic`, un livrable fonctionnel), le **ticket** (une unité livrable en une session de code). Tout ticket appartient à un epic ; tout epic appartient à un jalon.
+
 ## Règle fondamentale : les modes
 
 En début de session, l'opérateur déclare le mode de travail. La formulation est libre (« mode design », « on code », « libre », « on itère »…) ; en cas d'ambiguïté, demander confirmation. Déclarer un mode charge le skill correspondant, **qui fait autorité sur sa procédure** — ce fichier ne porte que le contrat commun.
@@ -47,7 +49,10 @@ En début de session, l'opérateur déclare le mode de travail. La formulation e
 |---|:-:|:-:|:-:|:-:|:-:|
 | Wiki — pages, sidebar | 👁 (délègue) | ✍️ | 👁 | 👁 | 👁 |
 | Issues — création, édition, open/close, labels, milestones, pin, assignation | 👁 (délègue) | 👁 | ✍️ | 👁 | 👁 |
-| Commentaires d'issues | 👁 (délègue) | 👁 | ✍️ | ✍️ | 👁 |
+| Commentaires d'issues et de PR | 👁 (délègue) | 👁 | ✍️ | ✍️ | 👁 |
+| Labels `level:*` d'une PR | 👁 (délègue) | 👁 | 👁 | ✍️ | 👁 |
+| GitHub Project — Status d'un item (si le projet en a un) | 👁 (délègue) | 👁 | ✍️ | ✍️ sur son ticket | 👁 |
+| GitHub Project — champs, vues, workflows | 👁 | 👁 | 👁 | 👁 | 👁 |
 | Codebase — fichiers, branches, commits, push, PR | 👁 (délègue) | 👁 | 👁 | ✍️ | 👁 |
 | Ce fichier (`CLAUDE.md`) | ✍️ | ❌ | ❌ | ✍️ * | ❌ |
 | Settings du repo, webhooks, collaborateurs | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -79,7 +84,7 @@ flowchart LR
 ```
 
 1. **DESIGN** — la feature est conçue dans le wiki (🟡 Brouillon), validée par l'opérateur (🟢 Validé), annoncée dans `Design-Changelog`.
-2. **MANAGER** — lit le changelog, découpe en tickets (contexte = lien wiki), priorise, labellise `status:ready`, range en milestone.
+2. **MANAGER** — lit le changelog, découpe en tickets (contexte = lien wiki + `Epic : #N`), priorise, labellise `status:ready`, range en milestone et coche l'epic.
 3. **CODE** — prend le ticket `status:ready` le plus prioritaire, implémente sur une branche `issue/N-slug`, ouvre une **PR avec `Fixes #N`**.
 4. **MANAGER** — surveille la PR et les critères d'acceptation. **L'opérateur merge** → le ticket se ferme automatiquement.
 5. **DESIGN** — constate les tickets fermés et passe les sections concernées en 🔵 Implémenté.
@@ -107,14 +112,32 @@ Les modes ne s'écrivent jamais dessus directement ; ils communiquent par ces su
 
 **Labels d'issues** :
 
-- Type : `type:feature` · `type:bug` · `type:chore` · `type:polish`
+- Type : `type:feature` · `type:bug` · `type:chore` · `type:polish` · `type:epic`
 - Priorité : `prio:P0` (bloquant) · `prio:P1` · `prio:P2` · `prio:P3`
 - État : `status:ready` (spec complète, prêt à coder) · `status:blocked` · `needs-design`
+- Risque (sur les PR, posé par CODE) : `level:2` · `level:3` — voir *Niveaux de risque*
+- `inbox` : l'issue épinglée `📥 Inbox — Triage`, et elle seule
 - Zones (facultatif, propres au projet) : <!-- ex. area:api · area:ui · area:infra --> `area:<...>`
 
 Un ticket ouvert sans `status:ready` = backlog non prêt : CODE n'y touche pas.
 
-**Milestones** = versions (`v0.1`, `v0.2`…), alignées sur la page wiki `Roadmap`.
+**Milestones** = versions (`v0.1`, `v0.2`…), alignées sur la page wiki `Roadmap`, qui est organisée en jalons → epics → tickets.
+
+**Epics** : une issue `type:epic`, titrée `Epic — <nom>`, dans le milestone de son jalon, avec un label `area:` si le projet en a. Son corps dit l'**Objectif**, la **Spécification** (liens wiki), le **Livrable** démontrable, et la liste **Tickets** en cases à cocher (`- [ ] #N`), cochées à la fermeture des tickets. Un epic ne se code pas : il n'est jamais `status:ready`. Il se ferme quand tous ses tickets sont fermés. Chaque ticket porte `Epic : #N` en première ligne de son Contexte.
+
+**Niveaux de risque** d'une PR, à annoncer dans son corps (`Niveau : 1, 2 ou 3`) :
+
+| Niveau | Changement | Contrôle |
+|---|---|---|
+| 1 — courant | Aucun effet sur la sécurité, les données, l'infra ou la restauration | Tests et CI |
+| 2 — sensible et borné | Effet réel mais réversible et circonscrit : migration additive, nouvelle donnée persistée, configuration, quota, nouveau endpoint authentifié | Label `level:2`, tests, retour arrière décrit, validation de l'opérateur avant production |
+| 3 — critique | Risque plausible de perte de données, de contournement d'accès, de fuite de secret ou de données personnelles ; migration destructive ; changement d'architecture d'auth ou de stockage | Label `level:3`, **fusion suspendue** jusqu'à revue de l'opérateur |
+
+<!-- Un projet qui manipule des données personnelles détaille ces niveaux dans un SECURITY.md à la racine. -->
+
+**Liens** : toute mention d'un ticket, d'un epic ou d'une PR dans une réponse à l'opérateur porte son URL GitHub complète, jamais un numéro seul.
+
+**GitHub Project** (facultatif) : <!-- supprimer ce paragraphe si le projet n'en a pas ; sinon, nommer le projet -->si le projet a un GitHub Project « <NOM DU PROJECT> », c'est la seule vue d'avancement. Champs : Status, Epic (liste, obligatoire), Milestone. Statuts : **Cadrage** (à spécifier, maquetter ou découper) → **Prêts** (= `status:ready`, posé par MANAGER) → **En cours** (CODE, à l'ouverture de la branche) → **À review** (CODE, à l'ouverture de la PR) → **À déployer** (à la fermeture de l'issue par le merge) → **Terminés** (après vérification par l'opérateur). Aucun autre champ, colonne ou vue sans décision de l'opérateur.
 
 **Wiki** : noms de pages en `Kebab-Case`, sans accents (URLs propres). Le clone du wiki vit en **dossier frère**, jamais dans la codebase : `../<REPO>.wiki`. Commits du wiki préfixés `design:`, push direct (pas de PR sur un wiki).
 
@@ -131,7 +154,7 @@ Un ticket ouvert sans `status:ready` = backlog non prêt : CODE n'y touche pas.
 -->
 <STACK, ARBORESCENCE, COMMANDES DE BUILD ET DE TEST, ANALYSE STATIQUE>
 
-**Git** : jamais de commit direct sur `<BRANCHE PRINCIPALE>`. Une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps de la PR. Messages de commit : `feat|fix|chore|polish: description`.
+**Git** : jamais de commit direct sur `<BRANCHE PRINCIPALE>`. Une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps de la PR (ou `Refs #N` pour une PR de process sans ticket à fermer). Messages de commit : `feat|fix|chore|polish: description`. **Plafond de diff** : viser moins de 400 lignes utiles, 500 maximum justifié dans la PR ; au-delà, redécouper le ticket.
 
 ## Garde-fous globaux
 

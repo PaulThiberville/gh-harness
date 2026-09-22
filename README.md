@@ -24,6 +24,8 @@ Une session démarre **en lecture seule**. L'opérateur déclare un mode de trav
 
 Les modes ne s'écrivent jamais dessus directement : ils communiquent par des **passerelles** — le `Design-Changelog` du wiki, le label `needs-design`, les tickets `status:ready`, la PR, l'issue épinglée `📥 Inbox — Triage`.
 
+Le backlog a **trois niveaux** : le **jalon** (milestone, une version testable), l'**epic** (une issue `type:epic`, un livrable fonctionnel, avec sa liste de tickets à cocher), le **ticket** (une unité livrable en une session de code). La page wiki `Roadmap` est organisée de la même façon.
+
 ## Installation
 
 ### Pour une personne seule
@@ -71,9 +73,19 @@ Sur un repo neuf, wiki activé :
 
 > mode INITIALISATION
 
-La session enchaîne alors : elle fait raconter l'idée, la creuse en plusieurs tours de brainstorm jusqu'à cerner le périmètre du MVP, rend une synthèse à valider, écrit le `CLAUDE.md` du projet, puis délègue à un sous-agent DESIGN (le wiki) et à un sous-agent MANAGER (labels, Inbox, milestone, premiers tickets).
+La session enchaîne alors : elle fait raconter l'idée, la creuse en plusieurs tours de brainstorm jusqu'à cerner le périmètre du MVP, rend une synthèse à valider, écrit le `CLAUDE.md` du projet, puis délègue à un sous-agent DESIGN (le wiki) et à un sous-agent MANAGER (labels, Inbox, milestone, epics, premiers tickets).
 
-En fin de session : un wiki qui documente le MVP, une Inbox épinglée, un milestone `v0.1`, et des tickets `status:ready` prêts pour une première session CODE.
+En fin de session : un wiki qui documente le MVP, une Inbox épinglée, un milestone `v0.1`, des epics, et des tickets `status:ready` prêts pour une première session CODE.
+
+### Le script de bootstrap
+
+Le sous-agent MANAGER pose l'ossature avec `scripts/bootstrap.sh`, utilisable aussi à la main sur un repo existant :
+
+```bash
+scripts/bootstrap.sh --areas api,ui,infra --milestones v0.1,v0.2 --epics epics.txt --project "Mon projet — MVP"
+```
+
+Il crée ou met à jour les labels, les milestones, l'Inbox épinglée (label `inbox`), les epics (`epics.txt` : une ligne `titre|milestone|area` par epic, virgules acceptées dans le titre) et, avec `--project`, un GitHub Project dont le champ Status porte les six statuts du harnais et le champ Epic les epics. Idempotent, ne supprime jamais rien, `--dry-run` pour voir sans faire. Il exige bash 4 (`brew install bash` sur macOS), `gh` authentifié et `jq` ; `--project` demande le scope `project` (`gh auth refresh -s project`). Il lit les issues par la liste, jamais par la recherche, dont l'index a plusieurs secondes de retard.
 
 ## Contenu
 
@@ -87,8 +99,11 @@ skills/                un skill par mode — chargé à la déclaration du mode
   mode-initialisation/ SKILL.md + brainstorm.md (techniques de brainstorm)
   mode-design/  mode-manager/  mode-code/
   mode-orchestrator/  mode-iteration/  mode-libre/
+scripts/
+  bootstrap.sh         labels, milestones, Inbox, epics, GitHub Project — idempotent
 templates/
   CLAUDE.md            le contrat de projet, instancié par l'INITIALISATION
+  epics.example.txt    le format du fichier d'epics du bootstrap
 ```
 
 Les agents ne dupliquent pas les skills : leur frontmatter `skills:` précharge le skill du mode correspondant. **Une procédure, un fichier** — qu'elle serve la session principale ou un sous-agent.
@@ -99,9 +114,13 @@ Les agents ne dupliquent pas les skills : leur frontmatter `skills:` précharge 
 
 **Statuts de page wiki** : 🟡 Brouillon → 🟢 Validé → 🔵 Implémenté. Seul l'opérateur valide.
 
-**Labels** : `type:feature|bug|chore|polish` · `prio:P0..P3` · `status:ready` · `status:blocked` · `needs-design` · `area:*` propres au projet.
+**Labels** : `type:feature|bug|chore|polish|epic` · `prio:P0..P3` · `status:ready` · `status:blocked` · `needs-design` · `level:2|3` (niveau de risque, sur les PR) · `inbox` (l'issue de triage) · `area:*` propres au projet.
 
-**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Jamais de commit direct sur la branche principale, jamais de `push --force`.
+**Epics** : issue `Epic — <nom>`, `type:epic`, dans le milestone de son jalon ; corps Objectif / Spécification / Livrable / Tickets (cases à cocher). Jamais `status:ready`. Chaque ticket porte `Epic : #N` en tête de son Contexte.
+
+**Niveaux de risque** d'une PR : 1 courant (tests et CI) · 2 sensible et borné (`level:2`, retour arrière décrit, validation de l'opérateur avant production) · 3 critique (`level:3`, fusion suspendue jusqu'à revue de l'opérateur).
+
+**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Plafond de diff : 400 lignes utiles visées, 500 maximum justifié. Jamais de commit direct sur la branche principale, jamais de `push --force`.
 
 ## Limites connues
 

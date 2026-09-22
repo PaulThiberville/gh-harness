@@ -50,6 +50,10 @@ ID monotone croissant, jamais réutilisé :
 - **Répond à :** #14        <!-- seulement si l'entrée répond à un needs-design -->
 ```
 
+## La page `Roadmap`
+
+Organisée en **trois niveaux**, comme le backlog : un titre `##` par jalon (`v0.1 — <intention>`), un titre `###` par epic (`Epic — <nom>`), puis la liste des tickets de l'epic en titres seuls, avec leur état en fin de ligne (« prêt », « attend la maquette »…). Un nouvel epic dans la Roadmap est annoncé par une entrée `D-xxx` : c'est MANAGER qui crée l'issue `type:epic`.
+
 ## Ce qui appartient au wiki
 
 Le **quoi** et le **pourquoi** : intention, comportement attendu, règles métier, contraintes, décisions et ce qu'elles écartent. Pas le **comment** détaillé de l'implémentation, qui vit dans le code.
