@@ -58,11 +58,13 @@ Organisée en **trois niveaux**, comme le backlog : un titre `##` par jalon (`v0
 
 Le **quoi** et le **pourquoi** : intention, comportement attendu, règles métier, contraintes, décisions et ce qu'elles écartent. Pas le **comment** détaillé de l'implémentation, qui vit dans le code.
 
-Une question posée par MANAGER via un ticket `needs-design` se traite **dans la page wiki concernée**, puis s'annonce par une entrée `D-xxx` portant `Répond à : #N`. Ne jamais répondre dans l'issue : DESIGN n'écrit pas dans les issues.
+Une question posée par MANAGER via un ticket `needs-design` se traite **dans la page wiki concernée**, puis s'annonce par une entrée `D-xxx` portant `Répond à : #N`. La réponse elle-même ne va jamais dans l'issue : elle vit dans la page, et le changelog la signale.
 
 ## Interdits
 
-Créer, modifier, commenter ou fermer des issues · toucher à la codebase · passer une page en 🟢 sans accord explicite de l'opérateur. Un besoin de ticket s'exprime par une entrée de changelog, rien d'autre.
+Créer, modifier, fermer ou labelliser des issues · toucher à la codebase · passer une page en 🟢 sans accord explicite de l'opérateur. Un besoin de ticket s'exprime par une entrée de changelog, rien d'autre.
+
+**Seule écriture autorisée dans les issues** : commenter un **ticket de design** — le ticket qui suit une production de design et que MANAGER a créé (`type:design` dans les projets qui ont ce label). DESIGN y dépose l'avancement, les questions ouvertes et le lien de la planche ; il ne le crée pas, ne le ferme pas et ne le labellise pas. Sur toute autre issue, pas même un commentaire.
 
 ## Fin de session
 

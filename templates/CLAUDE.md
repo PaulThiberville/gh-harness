@@ -49,7 +49,7 @@ En début de session, l'opérateur déclare le mode de travail. La formulation e
 |---|:-:|:-:|:-:|:-:|:-:|
 | Wiki — pages, sidebar | 👁 (délègue) | ✍️ | 👁 | 👁 | 👁 |
 | Issues — création, édition, open/close, labels, milestones, pin, assignation | 👁 (délègue) | 👁 | ✍️ | 👁 | 👁 |
-| Commentaires d'issues et de PR | 👁 (délègue) | 👁 | ✍️ | ✍️ | 👁 |
+| Commentaires d'issues et de PR | 👁 (délègue) | ✍️ tickets de design † | ✍️ | ✍️ | 👁 |
 | Labels `level:*` d'une PR | 👁 (délègue) | 👁 | 👁 | ✍️ | 👁 |
 | GitHub Project — Status d'un item (si le projet en a un) | 👁 (délègue) | 👁 | ✍️ | ✍️ sur son ticket | 👁 |
 | GitHub Project — champs, vues, workflows | 👁 | 👁 | 👁 | 👁 | 👁 |
@@ -59,6 +59,8 @@ En début de session, l'opérateur déclare le mode de travail. La formulation e
 | Déléguer à un sous-agent | ✍️ | — | — | — | ✍️ |
 
 👁 = lecture libre (toujours autorisée, dans tous les modes) · ✍️ = écriture autorisée · — = hors process pour ce mode : ne rien inventer, demander à l'opérateur · ❌ = interdit. Les settings du repo restent à l'opérateur, via l'UI web.
+
+† En DESIGN, la seule écriture autorisée dans les issues est le **commentaire d'un ticket de design** : avancement, questions ouvertes, lien de la planche. Ni création, ni fermeture, ni label, et rien sur les autres issues.
 
 \* En CODE, `CLAUDE.md` ne se modifie **qu'à la demande explicite** de l'opérateur. L'INITIALISATION est le seul mode qui l'écrive de plein droit — c'est son acte de naissance, et sa seule écriture directe.
 
