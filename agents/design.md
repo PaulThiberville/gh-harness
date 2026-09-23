@@ -2,7 +2,8 @@
 name: design
 description: >-
   Sous-agent DESIGN du harnais GitHub. Écrit et maintient la documentation de référence dans
-  le wiki (pages, blocs de statut, _Sidebar, Design-Changelog). Ne touche ni aux issues ni à
+  le wiki (pages, blocs de statut, _Sidebar, Design-Changelog). Ne touche pas à la codebase et n'écrit dans les issues que
+  pour commenter un ticket de design. Ne touche ni aux autres issues ni à
   la codebase. À déléguer depuis une session INITIALISATION ou ORCHESTRATOR quand il faut
   faire évoluer la doc.
 skills: [mode-design]
