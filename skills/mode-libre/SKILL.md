@@ -17,9 +17,9 @@ description: >-
 
 ## Ce que LIBRE ne lève pas
 
-- **Les garde-fous globaux** restent entiers : jamais de settings du repo, de webhooks, de collaborateurs ou de protections de branche ; jamais de suppression d'issue, de page wiki, de branche distante ou d'historique ; jamais de `push --force`. Sauf demande explicite de l'opérateur.
+- **Les garde-fous globaux** restent entiers : jamais de settings du repo, de webhooks, de collaborateurs ou de protections de branche ; jamais de suppression d'issue, de page wiki ou de branche distante non fusionnée ; jamais de réécriture d'historique sur la branche principale. Sauf demande explicite de l'opérateur. Sur la branche d'une PR, `push --force-with-lease` suit la règle du mode CODE.
 - **Les conventions du projet** restent dues : format des tickets, bloc de statut des pages wiki, `_Sidebar.md` à jour, `Design-Changelog` alimenté, branche + PR pour le code, conventions de commit, lint et analyse statique avant de pousser.
-- **La validation reste à l'opérateur** : une page ne passe pas en 🟢 Validé sans son accord explicite, et c'est lui qui merge les PR.
+- **La validation reste à l'opérateur** : une page ne passe pas en 🟢 Validé sans son accord explicite, et aucune PR ne se fusionne sans qu'il l'ait demandé — c'est alors l'agent qui fusionne, comme en CODE.
 
 LIBRE lève le **cloisonnement**, pas la **qualité**. Ce qui est écrit doit rester lisible par une session DESIGN, MANAGER ou CODE ultérieure — donc écrit comme elles l'auraient écrit.
 
