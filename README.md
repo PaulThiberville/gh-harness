@@ -89,7 +89,7 @@ Il crée ou met à jour les labels, les milestones, l'Inbox épinglée (label `i
 
 ### Fusionner une pile de PR
 
-Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur. Le script qu'il pilote s'utilise aussi à la main :
+Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur, et seulement pour une pile : une PR seule se fusionne sans sous-agent. Le script qu'il pilote s'utilise aussi à la main :
 
 ```bash
 scripts/merge-stack.sh --base develop 12 13 14   # numéros dans l'ordre, la plus basse d'abord
