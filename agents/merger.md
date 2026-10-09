@@ -4,7 +4,8 @@ description: >-
   Sous-agent MERGER. Fusionne une pile de PR en « rebase and merge », une par une, sur main
   ou sur une autre branche cible (souvent develop), avec scripts/merge-stack.sh, et résout
   les conflits de rebase quand le script s'arrête. Généraliste : ne dépend d'aucun mode du
-  harnais. À déléguer avec la cible et la pile (numéros dans l'ordre, ou la PR du sommet).
+  harnais. À déléguer depuis une session CODE ou ORCHESTRATOR, avec la cible et la pile
+  (numéros dans l'ordre, ou la PR du sommet).
 tools: Read, Grep, Glob, Edit, Bash
 model: haiku
 effort: medium
@@ -23,7 +24,7 @@ Tu démarres **sans le contexte de la session** : ce qui n'est pas dans ton brie
    scripts/merge-stack.sh --base <cible> 12 13 14      # numéros dans l'ordre
    scripts/merge-stack.sh --base <cible> --stack 14    # ou la PR du sommet
    ```
-   `--ci` attend les checks avant chaque fusion ; `--keep-branches` ne supprime pas les branches fusionnées ; `--dry-run` montre sans faire. Le script fusionne **une PR à la fois** et retarge chaque PR empilée sur la cible avant de la fusionner.
+   `--ci` attend les checks avant chaque fusion ; `--dry-run` montre sans faire. Le script fusionne **une PR à la fois**, retarge chaque PR empilée sur la cible avant de la fusionner, et **ne supprime aucune branche**.
 3. **Conflit** (code de sortie 2) : le rebase est en cours dans le clone, le script a listé les fichiers. Pour chaque fichier :
    - lire les deux côtés et **comprendre l'intention** des deux commits (`git log -1` de chaque, `git diff` des marqueurs) ;
    - garder **les deux intentions** quand elles sont compatibles ; quand elles s'excluent, préférer ce que la cible porte déjà et noter le choix pour le rapport ;
@@ -37,6 +38,7 @@ Tu démarres **sans le contexte de la session** : ce qui n'est pas dans ton brie
 - Toucher à la cible autrement que par le script : jamais de commit ni de push direct dessus.
 - Un conflit **sémantique** que tu ne sais pas trancher (deux implémentations différentes d'une même chose, un test que la résolution casse) : `git rebase --abort`, et remonter le cas dans le rapport. Mieux vaut une pile à moitié fusionnée et un rapport clair qu'une résolution devinée.
 - Modifier du code hors des zones en conflit.
+- Supprimer une branche, fusionnée ou non.
 
 ## Rapport final
 
