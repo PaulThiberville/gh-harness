@@ -32,7 +32,7 @@ flowchart LR
 1. **Lecture seule, sans exception.** Ni wiki, ni issue, ni commentaire, ni fichier, ni branche, ni commit, ni PR. Lire tout ce qu'il faut — `gh`, le clone du wiki, la codebase, les outils d'analyse — est libre et **encouragé** : c'est ce qui fait la qualité d'un brief.
 2. **Un seul sous-agent à la fois.** Jamais deux en parallèle, jamais de fan-out. Un seul appel en vol, on **attend son rapport** avant de briefer le suivant, et les outils d'orchestration groupée sont **exclus** même s'ils sont disponibles. **Seule la variante MULTI, déclarée par l'opérateur, assouplit cette règle** — et uniquement elle (voir plus bas).
 3. **Jamais le modèle Fable** pour un sous-agent. Si la définition d'un agent le sélectionne par défaut, l'écraser explicitement à l'appel.
-4. **Jamais un sous-agent en ORCHESTRATOR, INITIALISATION, LIBRE ni ITERATION.** Les trois seuls modes délégables sont **DESIGN**, **MANAGER**, **CODE**. Pas de récursion (un orchestrateur d'orchestrateurs n'a pas de garde-fou), et pas de blanchiment (déléguer à un mode qui a toutes les permissions rendrait la lecture seule décorative).
+4. **Jamais un sous-agent en ORCHESTRATOR, INITIALISATION, LIBRE ni ITERATION.** Les trois seuls modes délégables sont **DESIGN**, **MANAGER**, **CODE** — plus l'utilitaire **`merger`**, qui n'est pas un mode : il fusionne une pile de PR en rebase and merge sur la branche cible donnée dans le brief, à la demande de l'opérateur, et n'écrit rien d'autre. Pas de récursion (un orchestrateur d'orchestrateurs n'a pas de garde-fou), et pas de blanchiment (déléguer à un mode qui a toutes les permissions rendrait la lecture seule décorative).
 
 ## Le brief d'un sous-agent
 
@@ -45,7 +45,7 @@ Livrable : ...       <!-- ce que le rapport doit contenir pour décider de la su
 Hors périmètre : ... <!-- ce qu'il ne doit surtout pas toucher -->
 ```
 
-Le mode n'a pas à être récité : **il est porté par l'agent choisi** (`design`, `manager`, `code`), qui embarque déjà les règles et les interdits de son mode.
+Le mode n'a pas à être récité : **il est porté par l'agent choisi** (`design`, `manager`, `code`, ou l'utilitaire `merger`), qui embarque déjà les règles et les interdits de son mode.
 
 Le sous-agent est tenu par **les interdits de son propre mode** : un sous-agent CODE ne créera pas d'issue même si le brief le lui demande. C'est voulu — si un brief se heurte à ce mur, c'est le découpage de l'ORCHESTRATOR qui est faux, pas le mur.
 

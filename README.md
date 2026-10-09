@@ -89,14 +89,14 @@ Il crée ou met à jour les labels, les milestones, l'Inbox épinglée (label `i
 
 ### Fusionner une pile de PR
 
-Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Le script qu'il pilote s'utilise aussi à la main :
+Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur. Le script qu'il pilote s'utilise aussi à la main :
 
 ```bash
 scripts/merge-stack.sh --base develop 12 13 14   # numéros dans l'ordre, la plus basse d'abord
 scripts/merge-stack.sh --base develop --stack 14 # ou la PR du sommet : la pile est déduite des bases
 ```
 
-Chaque PR est rebasée localement sur la cible, poussée, retargetée sur la cible, puis fusionnée avec `gh pr merge --rebase`. Sur un conflit, le script s'arrête en laissant le rebase en cours et affiche la commande de reprise. `--ci` attend les checks, `--keep-branches` garde les branches, `--dry-run` montre sans faire.
+Chaque PR est rebasée localement sur la cible, poussée, retargetée sur la cible, puis fusionnée avec `gh pr merge --rebase`. Sur un conflit, le script s'arrête en laissant le rebase en cours et affiche la commande de reprise. Les branches ne sont jamais supprimées. `--ci` attend les checks, `--dry-run` montre sans faire.
 
 ## Contenu
 
@@ -106,7 +106,7 @@ Chaque PR est rebasée localement sur la cible, poussée, retargetée sur la cib
   marketplace.json     ce repo comme marketplace local/privé
 agents/                les trois modes délégables, pour les sous-agents, plus un utilitaire
   design.md  manager.md  code.md
-  merger.md            fusionne une pile de PR en rebase and merge (Haiku, effort moyen)
+  merger.md            fusionne une pile de PR en rebase and merge (Haiku, effort moyen) — depuis CODE ou ORCHESTRATOR
 skills/                un skill par mode — chargé à la déclaration du mode
   mode-initialisation/ SKILL.md + brainstorm.md (techniques de brainstorm)
   mode-design/  mode-manager/  mode-code/

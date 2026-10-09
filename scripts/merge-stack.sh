@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # merge-stack.sh — fusionne une pile de PR en « rebase and merge », une par une, sur une branche cible.
 #
-#   scripts/merge-stack.sh [--base main] [--ci] [--keep-branches] [--dry-run] 12 13 14
+#   scripts/merge-stack.sh [--base main] [--ci] [--dry-run] 12 13 14
 #   scripts/merge-stack.sh [--base develop] --stack 14     # 14 = PR du sommet, la pile est déduite
 #
 # Pour chaque PR, dans l'ordre (la plus basse d'abord) :
@@ -9,7 +9,7 @@
 #   2. push --force-with-lease
 #   3. gh pr edit --base <cible>   (une PR empilée visait la branche d'en dessous)
 #   4. (--ci) attente des checks
-#   5. gh pr merge --rebase
+#   5. gh pr merge --rebase   (les branches ne sont jamais supprimées)
 #
 # Conflit de rebase → le script s'arrête, code 2, le rebase reste en cours. Résoudre, puis :
 #   git add -A && git rebase --continue && git push --force-with-lease origin HEAD:<branche>
@@ -18,12 +18,11 @@
 
 set -euo pipefail
 
-base="main"; ci=0; keep=0; dry=0; stack_top=""; prs=()
+base="main"; ci=0; dry=0; stack_top=""; prs=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --base) base="$2"; shift 2 ;;
     --ci) ci=1; shift ;;
-    --keep-branches) keep=1; shift ;;
     --dry-run) dry=1; shift ;;
     --stack) stack_top="$2"; shift 2 ;;
     -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
@@ -86,8 +85,7 @@ for i in "${!prs[@]}"; do
   run git push -q --force-with-lease origin "HEAD:refs/heads/$branch"
   run gh pr edit "$n" --base "$base"
   (( ci )) && run gh pr checks "$n" --watch --fail-fast
-  merge_args=(--rebase); (( keep )) || merge_args+=(--delete-branch)
-  run gh pr merge "$n" "${merge_args[@]}"
+  run gh pr merge "$n" --rebase
   git fetch -q origin "$base"
   echo "✔ PR #$n fusionnée dans $base"
 done
