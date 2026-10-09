@@ -20,7 +20,7 @@ Projet hébergé sur [`<OWNER>/<REPO>`](https://github.com/<OWNER>/<REPO>)<!-- p
 
 Le CLI `gh` est authentifié ; git passe par HTTPS.
 
-**Vocabulaire** — l'**opérateur** est la personne qui pilote le harnais : elle seule déclare le mode, valide les specs et merge les PR. L'**agent** est Claude. Ce fichier s'adresse à l'agent.
+**Vocabulaire** — l'**opérateur** est la personne qui pilote le harnais : elle seule déclare le mode, valide les specs et décide des fusions ; l'agent fusionne quand elle le demande. Si le projet a plusieurs opérateurs, celui qui pilote la session décide, sans renvoi vers un autre. L'**agent** est Claude. Ce fichier s'adresse à l'agent.
 
 Le backlog a **trois niveaux** : le **jalon** (milestone GitHub, une version testable), l'**epic** (une issue `type:epic`, un livrable fonctionnel), le **ticket** (une unité livrable en une session de code). Tout ticket appartient à un epic ; tout epic appartient à un jalon.
 
@@ -88,7 +88,7 @@ flowchart LR
 1. **DESIGN** — la feature est conçue dans le wiki (🟡 Brouillon), validée par l'opérateur (🟢 Validé), annoncée dans `Design-Changelog`.
 2. **MANAGER** — lit le changelog, découpe en tickets (contexte = lien wiki + `Epic : #N`), priorise, labellise `status:ready`, range en milestone et coche l'epic.
 3. **CODE** — prend le ticket `status:ready` le plus prioritaire, implémente sur une branche `issue/N-slug`, ouvre une **PR avec `Fixes #N`**.
-4. **MANAGER** — surveille la PR et les critères d'acceptation. **L'opérateur merge** → le ticket se ferme automatiquement.
+4. **MANAGER** — surveille la PR et les critères d'acceptation. **L'agent fusionne à la demande de l'opérateur** → le ticket se ferme automatiquement.
 5. **DESIGN** — constate les tickets fermés et passe les sections concernées en 🔵 Implémenté.
 
 Le mode ITERATION prend ce cycle **à l'envers** : le code change d'abord, et la doc rattrape à la fin, en une fois. Le point d'arrivée est le même — une doc miroir fidèle du produit réel, et un backlog qui lui correspond.
@@ -133,7 +133,7 @@ Un ticket ouvert sans `status:ready` = backlog non prêt : CODE n'y touche pas.
 |---|---|---|
 | 1 — courant | Aucun effet sur la sécurité, les données, l'infra ou la restauration | Tests et CI |
 | 2 — sensible et borné | Effet réel mais réversible et circonscrit : migration additive, nouvelle donnée persistée, configuration, quota, nouveau endpoint authentifié | Label `level:2`, tests, retour arrière décrit, validation de l'opérateur avant production |
-| 3 — critique | Risque plausible de perte de données, de contournement d'accès, de fuite de secret ou de données personnelles ; migration destructive ; changement d'architecture d'auth ou de stockage | Label `level:3`, **fusion suspendue** jusqu'à revue de l'opérateur |
+| 3 — critique | Risque plausible de perte de données, de contournement d'accès, de fuite de secret ou de données personnelles ; migration destructive ; changement d'architecture d'auth ou de stockage | Label `level:3`, **fusion suspendue** jusqu'à ce que l'opérateur la demande |
 
 <!-- Un projet qui manipule des données personnelles détaille ces niveaux dans un SECURITY.md à la racine. -->
 
@@ -161,6 +161,7 @@ Un ticket ouvert sans `status:ready` = backlog non prêt : CODE n'y touche pas.
 ## Garde-fous globaux
 
 - Ne jamais toucher aux settings du repo, webhooks, collaborateurs, protections de branche.
-- Ne jamais supprimer : issue, page wiki, branche distante, historique (`push --force` interdit) — sauf demande explicite de l'opérateur.
+- Ne jamais supprimer : issue, page wiki, branche distante non fusionnée, historique de la branche principale — sauf demande explicite de l'opérateur. `push --force-with-lease` n'est permis que sur la branche d'une PR, après un rebase sur la branche principale ou à sa demande.
+- Ne jamais fusionner une PR sans que l'opérateur l'ait demandé ; ne jamais consigner une vérification humaine qu'il n'a pas déclarée. Quand il l'a dit, l'agent fusionne et consigne lui-même.
 - Ce fichier ne se modifie qu'à la demande explicite de l'opérateur, en mode CODE (l'INITIALISATION l'écrit une fois, à la naissance du projet).
 - Doute sur le périmètre d'une action → demander à l'opérateur, ou consigner dans la passerelle adéquate.

@@ -110,7 +110,7 @@ Les agents ne dupliquent pas les skills : leur frontmatter `skills:` précharge 
 
 ## Conventions
 
-**Vocabulaire** — l'**opérateur** est la personne qui pilote le harnais : elle seule déclare le mode, valide les specs et merge les PR. L'**agent** est Claude.
+**Vocabulaire** — l'**opérateur** est la personne qui pilote le harnais : elle seule déclare le mode, valide les specs et décide des fusions ; l'agent fusionne quand elle le demande. Un projet peut avoir plusieurs opérateurs : celui qui pilote la session décide, sans renvoi vers un autre. L'**agent** est Claude.
 
 **Statuts de page wiki** : 🟡 Brouillon → 🟢 Validé → 🔵 Implémenté. Seul l'opérateur valide.
 
@@ -118,9 +118,11 @@ Les agents ne dupliquent pas les skills : leur frontmatter `skills:` précharge 
 
 **Epics** : issue `Epic — <nom>`, `type:epic`, dans le milestone de son jalon ; corps Objectif / Spécification / Livrable / Tickets (cases à cocher). Jamais `status:ready`. Chaque ticket porte `Epic : #N` en tête de son Contexte.
 
-**Niveaux de risque** d'une PR : 1 courant (tests et CI) · 2 sensible et borné (`level:2`, retour arrière décrit, validation de l'opérateur avant production) · 3 critique (`level:3`, fusion suspendue jusqu'à revue de l'opérateur).
+**Niveaux de risque** d'une PR : 1 courant (tests et CI) · 2 sensible et borné (`level:2`, retour arrière décrit, validation de l'opérateur avant production) · 3 critique (`level:3`, fusion suspendue jusqu'à ce que l'opérateur la demande).
 
-**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Plafond de diff : 400 lignes utiles visées, 500 maximum justifié. Jamais de commit direct sur la branche principale, jamais de `push --force`.
+**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Plafond de diff : 400 lignes utiles visées, 500 maximum justifié. Jamais de commit direct ni de réécriture d'historique sur la branche principale ; `push --force-with-lease` sur la branche d'une PR seulement après un rebase ou à la demande de l'opérateur. L'agent fusionne à la demande de l'opérateur, une PR ou toute une pile.
+
+**Vérifications humaines** : ce que l'opérateur dit avoir testé ou vérifié dans la session, l'agent le consigne lui-même (case cochée, commentaire qui dit qui, quoi, quand et sur quoi), sans lui demander de l'écrire. Il ne consigne rien que l'opérateur n'a pas déclaré.
 
 ## Limites connues
 

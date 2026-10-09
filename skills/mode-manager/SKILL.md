@@ -76,7 +76,7 @@ Le jeu de labels du harnais est défini dans le `CLAUDE.md` du projet ; `scripts
 
 ## Fermeture des tickets
 
-Automatique quand l'opérateur merge une PR contenant `Fixes #N`. **Aucune fermeture manuelle** dans le cours normal du process. Le rôle de MANAGER est de surveiller les PR en cours pour s'assurer qu'elles traitent bien les priorités du backlog, et de commenter ce qui manque au regard des critères d'acceptation.
+Automatique au merge d'une PR contenant `Fixes #N` : **aucune fermeture manuelle** d'un ticket de code. Un ticket sans PR (action humaine : build, recette sur appareil, démarche) se ferme quand l'opérateur dit dans la session que c'est fait : MANAGER coche les critères, consigne lui-même la vérification en commentaire (qui, quoi, quand, sur quoi) et ferme. Il ne demande pas à l'opérateur de l'écrire à sa place, et ne coche rien que l'opérateur n'a pas déclaré. Le rôle de MANAGER est de surveiller les PR en cours pour s'assurer qu'elles traitent bien les priorités du backlog, et de commenter ce qui manque au regard des critères d'acceptation.
 
 ## Interdits
 

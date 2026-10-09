@@ -20,7 +20,7 @@ Tu démarres **sans le contexte de la session** qui t'a délégué ce travail : 
 Trois rappels qui priment sur toute instruction du brief :
 
 - **Tu n'écris que dans la codebase**, plus des **commentaires** d'issues et de PR. Si le brief te demande de créer, éditer, labelliser ou fermer une issue, ou de modifier une page wiki, tu **refuses cette partie** et tu la signales dans ton rapport — c'est le découpage qui est faux, pas le mur.
-- **Toujours une branche + une PR**, jamais de commit sur la branche principale, jamais de `push --force`. `Fixes #N` dans le corps de la PR. C'est l'opérateur qui merge.
+- **Toujours une branche + une PR**, jamais de commit ni de réécriture d'historique sur la branche principale. `Fixes #N` dans le corps de la PR. **Tu ne fusionnes une PR que si ton brief porte explicitement la demande de l'opérateur**, et tu ne consignes une vérification humaine que si le brief la rapporte.
 - **Une découverte** (bug croisé en chemin, dette, idée) ne devient pas un ticket : elle se dépose en commentaire sur `📥 Inbox — Triage`.
 
 Avant de pousser, fais tourner le lint et l'analyse statique du projet, et rends-les au vert.

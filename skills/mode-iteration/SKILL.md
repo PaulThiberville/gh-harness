@@ -23,7 +23,7 @@ flowchart LR
   I -->|push| PR["PR — relue par l'opérateur"]
   PR -->|"« tout est validé, aligne la doc »"| W["wiki<br/>(comme DESIGN)"]
   W --> T["issues<br/>(comme MANAGER)"]
-  T --> M["l'opérateur merge la PR"]
+  T --> M["fusion, à la demande de l'opérateur"]
 ```
 
 ## Démarrage de session
@@ -36,7 +36,7 @@ flowchart LR
 
 - **Une demande = un commit**, petit, nommé pour ce qu'il change, **poussé aussitôt** : la PR est toujours à jour de la dernière demande, et l'opérateur peut relire commit par commit.
 - **Réponse courte** : ce qui a changé, où, ce qui reste à vérifier de son côté. Pas de plan, pas de commentaire sur le ticket, pas de question que le code peut trancher. Une ambiguïté réelle se demande **avant** de coder — une interprétation silencieuse coûte une itération de plus.
-- Les conventions de la codebase restent dues : lint et analyse statique en local avant de pousser, jamais de commit direct sur la branche principale, jamais de `push --force`.
+- Les conventions de la codebase restent dues : lint et analyse statique en local avant de pousser, jamais de commit direct ni de réécriture d'historique sur la branche principale ; sur la branche de la PR, `push --force-with-lease` seulement après un rebase sur la branche principale ou à la demande de l'opérateur.
 - **Pendant la boucle, ni wiki ni issues** (sauf demande explicite). Une découverte hors périmètre, une incohérence de design, une dette : se notent et attendent l'alignement.
 - Une demande qui **contredit une page 🟢 Validé se fait quand même** : en ITERATION, la demande de l'opérateur fait foi, et c'est l'alignement qui mettra le wiki au niveau. Le signaler en une ligne, sans bloquer.
 
@@ -47,7 +47,7 @@ Déclenché **uniquement** par l'opérateur (« tout est validé », « aligne l
 1. **Passe DESIGN (wiki)** — relire les commits de la session (`git log <base>..HEAD`, le diff de la PR) et mettre les pages concernées au niveau du code : bloc de statut, contenu, `_Sidebar.md` si une page naît ou change de nom. Statut : 🟢 Validé (la demande d'alignement vaut accord explicite), ou 🔵 Implémenté si la PR est déjà mergée. Écrire **une entrée `D-xxx` de constat** — « déjà fait, en PR #N », jamais une directive — qui dit ce qui a changé et, s'il y a lieu, quel design validé elle défait ; **l'annoter comme traitée** pour qu'aucune session MANAGER ne la re-ticketise. Commit `design:`, push direct.
 2. **Passe MANAGER (issues)** — mettre le backlog en accord avec la PR : si la PR a un ticket (`Fixes #N`), remettre ses critères d'acceptation au niveau de ce qui est livré ; si elle n'en a pas, **en créer un** (format MANAGER, contexte = `Epic : #N` + page wiki alignée + `D-xxx`, labels, milestone, coché dans son epic) et ajouter `Fixes #M` au corps de la PR ; fermer ou commenter les tickets rendus obsolètes ou livrés en passant ; transformer les découvertes notées pendant la boucle en tickets, ou en commentaires sur `📥 Inbox — Triage` si elles ne sont pas mûres.
 
-Une passe peut conclure **« rien à aligner »** — des itérations de pur refactor ou de bug n'ont pas de portée sur la doc. Le dire, ne rien inventer. Une fois l'alignement fait, la PR est **prête à merger**.
+Une passe peut conclure **« rien à aligner »** — des itérations de pur refactor ou de bug n'ont pas de portée sur la doc. Le dire, ne rien inventer. Une fois l'alignement fait, la PR est **prête à merger** : l'agent la fusionne si l'opérateur le demande.
 
 ## Definition of done
 
@@ -55,7 +55,7 @@ La PR est à jour de la dernière demande et verte ; si l'alignement a été dem
 
 ## Interdits
 
-Déclencher l'alignement sans que l'opérateur l'ait demandé · écrire dans le wiki ou les issues pendant la boucle sans demande explicite · tout ce que les garde-fous globaux interdisent (settings, suppressions, `push --force`).
+Déclencher l'alignement sans que l'opérateur l'ait demandé · écrire dans le wiki ou les issues pendant la boucle sans demande explicite · fusionner sans que l'opérateur l'ait demandé · tout ce que les garde-fous globaux interdisent (settings, suppressions, réécriture de la branche principale).
 
 ## Fin de session
 
