@@ -39,7 +39,7 @@ En début de session, l'opérateur déclare le mode de travail. La formulation e
 | 🎨 **DESIGN** | Conçoit et maintient la documentation de référence dans le wiki. | `mode-design` |
 | 📋 **MANAGER** | Transforme le design validé en tickets, priorise, débloque, vérifie. | `mode-manager` |
 | ⌨️ **CODE** | Implémente les tickets `status:ready` sur une branche, ouvre une PR. | `mode-code` |
-| 🎼 **ORCHESTRATOR** | Atteint un objectif traversant plusieurs modes **sans jamais écrire** : il délègue. | `mode-orchestrator` |
+| 🎼 **ORCHESTRATOR** | Atteint un objectif traversant plusieurs modes **sans jamais écrire** : il délègue, un sous-agent à la fois (ou N en parallèle en variante **MULTI**, 3 par défaut). | `mode-orchestrator` |
 | ⚡ **ITERATION** | Absorbe une rafale de corrections directement dans la codebase ; la doc rattrape à la fin. | `mode-iteration` |
 | 🔓 **LIBRE** | Suspend le cloisonnement. Pour le transversal et l'exceptionnel. | `mode-libre` |
 
