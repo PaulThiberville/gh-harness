@@ -18,7 +18,7 @@ Une session démarre **en lecture seule**. L'opérateur déclare un mode de trav
 | 🎨 **DESIGN** | wiki | Conçoit et maintient la documentation de référence. |
 | 📋 **MANAGER** | issues | Transforme le design validé en tickets, priorise, débloque, vérifie. |
 | ⌨️ **CODE** | codebase + commentaires | Implémente les tickets `status:ready`, branche + PR. |
-| 🎼 **ORCHESTRATOR** | *rien* | Traverse plusieurs modes sans jamais écrire : il délègue, un sous-agent à la fois. |
+| 🎼 **ORCHESTRATOR** | *rien* | Traverse plusieurs modes sans jamais écrire : il délègue, un sous-agent à la fois. En variante **MULTI**, jusqu'à N en parallèle sur des périmètres disjoints (3 par défaut). |
 | ⚡ **ITERATION** | tout | Absorbe une rafale de corrections dans le code ; la doc rattrape à la fin. |
 | 🔓 **LIBRE** | tout | Suspend le cloisonnement. Pour le transversal et l'exceptionnel. |
 

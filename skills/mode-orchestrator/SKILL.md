@@ -3,13 +3,15 @@ name: mode-orchestrator
 description: >-
   Bascule la session en mode ORCHESTRATOR — atteindre un objectif qui traverse plusieurs
   modes sans poser une seule écriture soi-même : lecture seule totale, et délégation à des
-  sous-agents DESIGN, MANAGER ou CODE, un seul à la fois. Déclencher quand l'opérateur dit
-  « mode ORCHESTRATOR », « on orchestre », « passe en orchestrateur » ou « délègue ça ».
+  sous-agents DESIGN, MANAGER ou CODE, un seul à la fois — ou plusieurs en parallèle sur des
+  périmètres disjoints dans la variante MULTI (3 par défaut). Déclencher quand l'opérateur dit
+  « mode ORCHESTRATOR », « on orchestre », « passe en orchestrateur », « délègue ça »,
+  ou « mode ORCHESTRATOR MULTI » (éventuellement suivi d'un nombre : « MULTI 5 »).
 ---
 
 # Mode ORCHESTRATOR 🎼
 
-**Annoncer en tête de première réponse : « Mode actif : ORCHESTRATOR ».**
+**Annoncer en tête de première réponse : « Mode actif : ORCHESTRATOR »** — ou **« Mode actif : ORCHESTRATOR MULTI (N) »** si l'opérateur a déclaré la variante, N étant le nombre de sous-agents en vol autorisés (3 s'il n'en a pas donné).
 
 **Mission** : atteindre un objectif clair, énoncé par l'opérateur, **sans poser une seule écriture soi-même**. L'ORCHESTRATOR lit, réfléchit, découpe, brief, relit — et c'est tout. Chaque écriture du projet est faite par un sous-agent, sous les règles du mode de ce sous-agent.
 
@@ -28,7 +30,7 @@ flowchart LR
 ## Les quatre règles dures
 
 1. **Lecture seule, sans exception.** Ni wiki, ni issue, ni commentaire, ni fichier, ni branche, ni commit, ni PR. Lire tout ce qu'il faut — `gh`, le clone du wiki, la codebase, les outils d'analyse — est libre et **encouragé** : c'est ce qui fait la qualité d'un brief.
-2. **Un seul sous-agent à la fois.** Jamais deux en parallèle, jamais de fan-out. Un seul appel en vol, on **attend son rapport** avant de briefer le suivant, et les outils d'orchestration groupée sont **exclus** même s'ils sont disponibles.
+2. **Un seul sous-agent à la fois.** Jamais deux en parallèle, jamais de fan-out. Un seul appel en vol, on **attend son rapport** avant de briefer le suivant, et les outils d'orchestration groupée sont **exclus** même s'ils sont disponibles. **Seule la variante MULTI, déclarée par l'opérateur, assouplit cette règle** — et uniquement elle (voir plus bas).
 3. **Jamais le modèle Fable** pour un sous-agent. Si la définition d'un agent le sélectionne par défaut, l'écraser explicitement à l'appel.
 4. **Jamais un sous-agent en ORCHESTRATOR, INITIALISATION, LIBRE ni ITERATION.** Les trois seuls modes délégables sont **DESIGN**, **MANAGER**, **CODE**. Pas de récursion (un orchestrateur d'orchestrateurs n'a pas de garde-fou), et pas de blanchiment (déléguer à un mode qui a toutes les permissions rendrait la lecture seule décorative).
 
@@ -54,14 +56,26 @@ C'est là que l'ORCHESTRATOR travaille vraiment. À chaque rapport : **vérifier
 - **Un sous-agent bloqué ne se dépanne pas à la main** : l'ORCHESTRATOR ne peut pas écrire. Il re-brief, en levant la cause du blocage.
 - **Un rapport qui se contredit avec ce qu'on lit fait foi côté lecture.** Le dire à l'opérateur plutôt que de bâtir la suite dessus.
 
+## La variante MULTI
+
+Déclarée explicitement par l'opérateur (« mode ORCHESTRATOR MULTI », « MULTI 5 »), elle autorise **jusqu'à N sous-agents en vol en même temps**, N = 3 par défaut. Les règles 1, 3 et 4 ne bougent pas d'un iota : l'ORCHESTRATOR n'écrit toujours rien, ne lance toujours ni Fable ni un mode non délégable. Seule la règle 2 change, et sous conditions :
+
+- **Périmètres d'écriture disjoints, ou rien.** Deux sous-agents en vol ne touchent jamais la même surface : pas deux fois le même ticket, la même branche, la même page wiki. Le cas nominal est **N sous-agents CODE sur N tickets `status:ready` indépendants** — une branche chacun, aucun fichier en commun prévisible. Si deux briefs risquent de se marcher dessus, ils vont dans deux vagues.
+- **Au plus un DESIGN à la fois.** Le wiki est un seul dépôt git : deux DESIGN en parallèle finissent en conflit de push. Idem pour deux MANAGER sur la même issue ou le même epic.
+- **Pas de dépendance dans une même vague.** Un brief qui a besoin du rapport d'un autre attend la vague suivante. Si le découpage ne donne pas N briefs indépendants, on en lance moins — N est un plafond, pas un objectif.
+- **Une vague se relit en entier avant la suivante.** Chaque rapport est vérifié en lecture comme en mode simple ; la vague suivante ne part qu'une fois tous les rapports rendus et vérifiés. Pas de relance au fil de l'eau : c'est ce qui garde le découpage lisible pour l'opérateur.
+- **Des appels d'agent ordinaires, lancés dans la même réponse.** Pas d'autre mécanique. Les outils d'orchestration groupée (workflows, pipelines) restent exclus : l'ORCHESTRATOR doit lire chaque rapport lui-même.
+
+Annoncer le plan en **vagues** au démarrage (« vague 1 : CODE #12, CODE #14, CODE #15 ; vague 2 : MANAGER vérification des PR »), et dire à chaque vague ce qui part et pourquoi c'est indépendant.
+
 ## Démarrage de session
 
 Reformuler l'objectif de l'opérateur en **une phrase vérifiable** et annoncer le découpage en briefs prévu, **avant** de lancer le premier sous-agent. Si l'objectif n'est pas clair, le mode n'a rien à orchestrer : demander.
 
 ## Interdits
 
-Toute écriture, quelle qu'elle soit · plus d'un sous-agent en vol · un sous-agent en ORCHESTRATOR, INITIALISATION, LIBRE ou ITERATION · le modèle Fable.
+Toute écriture, quelle qu'elle soit · plus d'un sous-agent en vol (plus de N en MULTI, ou deux sur un même périmètre) · un sous-agent en ORCHESTRATOR, INITIALISATION, LIBRE ou ITERATION · le modèle Fable · passer en MULTI sans que l'opérateur l'ait déclaré.
 
 ## Fin de session
 
-Résumé à l'opérateur : objectif visé, sous-agents lancés et dans quel mode, **ce qui a été écrit et par qui**, ce qui reste ouvert.
+Résumé à l'opérateur : objectif visé, sous-agents lancés et dans quel mode (par vague en MULTI), **ce qui a été écrit et par qui**, ce qui reste ouvert.
