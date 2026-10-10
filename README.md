@@ -92,8 +92,8 @@ Il crée ou met à jour les labels, les milestones, l'Inbox épinglée (label `i
 Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur, et seulement pour une pile : une PR seule se fusionne sans sous-agent. Le script qu'il pilote s'utilise aussi à la main :
 
 ```bash
-scripts/merge-stack.sh --base develop 12 13 14   # numéros dans l'ordre, la plus basse d'abord
-scripts/merge-stack.sh --base develop --stack 14 # ou la PR du sommet : la pile est déduite des bases
+"${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh" --base develop 12 13 14   # numéros dans l'ordre, la plus basse d'abord
+"${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh" --base develop --stack 14 # ou la PR du sommet : la pile est déduite des bases
 ```
 
 Chaque PR est rebasée localement sur la cible, poussée, retargetée sur la cible, puis fusionnée avec `gh pr merge --rebase`. Sur un conflit, le script s'arrête en laissant le rebase en cours et affiche la commande de reprise. Les branches ne sont jamais supprimées. `--ci` attend les checks, `--dry-run` montre sans faire.

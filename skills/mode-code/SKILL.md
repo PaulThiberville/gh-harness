@@ -47,7 +47,7 @@ description: >-
 
 Une pile de PR se fusionne de bas en haut sur une seule demande : fusionner la PR du bas, rebaser la suivante sur la branche principale, `git push --force-with-lease`, rebrancher sa base sur la branche principale, attendre la CI, fusionner, et ainsi de suite. Une CI rouge, ou un conflit dont la résolution change le code, arrête la pile : le dire, ne rien forcer.
 
-Pour une pile en rebase and merge, cette mécanique se **délègue au sous-agent `merger`** (brief : la branche cible, les numéros dans l'ordre ou la PR du sommet, `--ci` si la CI doit être attendue). C'est le seul sous-agent que CODE lance, et **seulement pour une pile** — deux PR ou plus, empilées. Une PR seule se fusionne à la main, `gh pr merge`, sans sous-agent. Son rapport se vérifie en lecture (`gh pr view` dit `MERGED`) avant de l'annoncer à l'opérateur.
+Pour une pile en rebase and merge, cette mécanique se **délègue au sous-agent `merger`** (brief : la branche cible, les numéros dans l'ordre ou la PR du sommet, `--ci` si la CI doit être attendue ; le script est `"${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh"`, à nommer tel quel dans le brief). C'est le seul sous-agent que CODE lance, et **seulement pour une pile** — deux PR ou plus, empilées. Une PR seule se fusionne à la main, `gh pr merge`, sans sous-agent. Son rapport se vérifie en lecture (`gh pr view` dit `MERGED`) avant de l'annoncer à l'opérateur.
 
 ## Definition of done
 

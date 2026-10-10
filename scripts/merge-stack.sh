@@ -60,7 +60,7 @@ conflict() {  # $1 = branche, $2 = index de la PR courante
   echo "✖ conflit en rebasant « $1 » sur « $base ». Fichiers :" >&2
   git diff --name-only --diff-filter=U >&2
   echo "→ résoudre, puis : git add -A && git rebase --continue && git push --force-with-lease origin HEAD:$1" >&2
-  echo "→ puis relancer : $0 --base $base ${prs[*]:$2}" >&2
+  echo "→ puis relancer : "$0" --base $base ${prs[*]:$2}" >&2
   exit 2
 }
 
