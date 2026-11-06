@@ -89,7 +89,7 @@ Il crée ou met à jour les labels, les milestones, l'Inbox épinglée (label `i
 
 ### Fusionner une pile de PR
 
-Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur, et seulement pour une pile : une PR seule se fusionne sans sous-agent. Le script qu'il pilote s'utilise aussi à la main :
+Le sous-agent `merger` fusionne une pile de PR en **rebase and merge**, une par une, sur `main` ou sur la branche de son choix, et résout les conflits de rebase quand ils surviennent. Il tourne sur Haiku avec un effort de raisonnement moyen : c'est une tâche mécanique. Il se délègue depuis une session **CODE** ou **ORCHESTRATOR**, à la demande de l'opérateur, et seulement pour une pile — des PR de tickets différents, dont l'une dépend d'une autre pas encore fusionnée : une PR seule se fusionne sans sous-agent. Le script qu'il pilote s'utilise aussi à la main :
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh" --base develop 12 13 14   # numéros dans l'ordre, la plus basse d'abord
@@ -133,7 +133,7 @@ Les agents ne dupliquent pas les skills : leur frontmatter `skills:` précharge 
 
 **Niveaux de risque** d'une PR : 1 courant (tests et CI) · 2 sensible et borné (`level:2`, retour arrière décrit, validation de l'opérateur avant production) · 3 critique (`level:3`, fusion suspendue jusqu'à ce que l'opérateur la demande).
 
-**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Plafond de diff : 400 lignes utiles visées, 500 maximum justifié. Jamais de commit direct ni de réécriture d'historique sur la branche principale ; `push --force-with-lease` sur la branche d'une PR seulement après un rebase ou à la demande de l'opérateur. L'agent fusionne à la demande de l'opérateur, une PR ou toute une pile.
+**Git** : une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps. Une seule PR par ticket, jamais de PR empilées pour un même ticket. Plafond de diff par commit : 400 lignes utiles visées, 500 maximum ; une PR plus grosse se découpe en commits qui tiennent chacun le plafond, son total justifié dans le corps de la PR, formatage mécanique et fichiers générés comptés à part. Jamais de commit direct ni de réécriture d'historique sur la branche principale ; `push --force-with-lease` sur la branche d'une PR seulement après un rebase ou à la demande de l'opérateur. L'agent fusionne à la demande de l'opérateur, une PR ou toute une pile.
 
 **Vérifications humaines** : ce que l'opérateur dit avoir testé ou vérifié dans la session, l'agent le consigne lui-même (case cochée, commentaire qui dit qui, quoi, quand et sur quoi), sans lui demander de l'écrire. Il ne consigne rien que l'opérateur n'a pas déclaré.
 

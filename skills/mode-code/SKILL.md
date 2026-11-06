@@ -28,7 +28,8 @@ description: >-
 
 - **Toujours une branche + une PR.** Jamais de commit direct sur la branche principale. Nommer la branche `issue/N-slug` (ex. `issue/12-usage-billing`).
 - PR : `Fixes #N` ou `Closes #N` dans le corps, pour fermeture automatique au merge (`Refs #N` pour une PR de process sans ticket à fermer). Respecter le template de PR du projet s'il en a un.
-- **Plafond de diff** : viser moins de 400 lignes utiles, 500 maximum justifié dans la PR ; au-delà, s'arrêter et signaler que le ticket est à redécouper. Formatage mécanique et fichiers générés identifiés à part. Jamais de compression du code pour tenir le seuil.
+- **Une seule PR par ticket, toujours.** Jamais de PR empilées pour un même ticket : une PR trop grosse se découpe en commits, pas en PR.
+- **Plafond de diff, par commit** : chaque commit vise moins de 400 lignes utiles, 500 maximum. La PR peut dépasser 500 au total : elle se découpe alors en commits lisibles qui tiennent chacun le plafond, et le total se justifie dans le corps de la PR. Formatage mécanique et fichiers générés (snapshots de migration, thème généré…) comptés à part. Jamais de compression du code pour tenir le seuil.
 - **Niveau de risque** : annoncer `Niveau : 1, 2 ou 3` dans le corps de la PR selon la grille du `CLAUDE.md` du projet. Niveau 2 → label `level:2` sur la PR et retour arrière décrit. Niveau 3 → label `level:3`, et la PR **attend la revue de l'opérateur**, dont la demande de fusion vaut accord : le dire dans le résumé de fin de session. Les labels `level:*` sont la seule écriture de label autorisée en CODE, et seulement sur une PR.
 - Messages de commit : `feat|fix|chore|polish: description`, dans la langue de code du projet. Pas de `Refs #N` — GitHub lie le commit au ticket via la branche.
 - Les conventions de code, le lint et l'analyse statique du projet sont dues **avant de pousser** ; la CI les rejoue sur la PR.
@@ -47,7 +48,7 @@ description: >-
 
 Une pile de PR se fusionne de bas en haut sur une seule demande : fusionner la PR du bas, rebaser la suivante sur la branche principale, `git push --force-with-lease`, rebrancher sa base sur la branche principale, attendre la CI, fusionner, et ainsi de suite. Une CI rouge, ou un conflit dont la résolution change le code, arrête la pile : le dire, ne rien forcer.
 
-Pour une pile en rebase and merge, cette mécanique se **délègue au sous-agent `merger`** (brief : la branche cible, les numéros dans l'ordre ou la PR du sommet, `--ci` si la CI doit être attendue ; le script est `"${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh"`, à nommer tel quel dans le brief). C'est le seul sous-agent que CODE lance, et **seulement pour une pile** — deux PR ou plus, empilées. Une PR seule se fusionne à la main, `gh pr merge`, sans sous-agent. Son rapport se vérifie en lecture (`gh pr view` dit `MERGED`) avant de l'annoncer à l'opérateur.
+Pour une pile en rebase and merge, cette mécanique se **délègue au sous-agent `merger`** (brief : la branche cible, les numéros dans l'ordre ou la PR du sommet, `--ci` si la CI doit être attendue ; le script est `"${CLAUDE_PLUGIN_ROOT}/scripts/merge-stack.sh"`, à nommer tel quel dans le brief). C'est le seul sous-agent que CODE lance, et **seulement pour une pile** — deux PR ou plus, empilées, de tickets différents (un ticket qui dépend d'un autre pas encore fusionné). Une PR seule se fusionne à la main, `gh pr merge`, sans sous-agent. Son rapport se vérifie en lecture (`gh pr view` dit `MERGED`) avant de l'annoncer à l'opérateur.
 
 ## Definition of done
 
