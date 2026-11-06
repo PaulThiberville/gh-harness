@@ -46,7 +46,7 @@ Spécification concrète et mesurable.
 ## Notes techniques (facultatif)
 ```
 
-**Règles** : 1 ticket = **1 unité livrable en une session de code**, sous le plafond de diff du projet — découper sinon. Une capacité sans section wiki 🟢 Validé n'est pas ticketable : créer un ticket `needs-design` à la place. À la création d'un ticket, l'ajouter à la liste **Tickets** de son epic (`gh issue edit <epic> --body`).
+**Règles** : 1 ticket = **1 unité livrable en une session de code**, livrée en une seule PR. Une capacité sans section wiki 🟢 Validé n'est pas ticketable : créer un ticket `needs-design` à la place. À la création d'un ticket, l'ajouter à la liste **Tickets** de son epic (`gh issue edit <epic> --body`).
 
 ## Format d'un epic
 

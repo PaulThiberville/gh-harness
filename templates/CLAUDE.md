@@ -156,7 +156,7 @@ Un ticket ouvert sans `status:ready` = backlog non prêt : CODE n'y touche pas.
 -->
 <STACK, ARBORESCENCE, COMMANDES DE BUILD ET DE TEST, ANALYSE STATIQUE>
 
-**Git** : jamais de commit direct sur `<BRANCHE PRINCIPALE>`. Une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps de la PR (ou `Refs #N` pour une PR de process sans ticket à fermer). Messages de commit : `feat|fix|chore|polish: description`. **Plafond de diff** : viser moins de 400 lignes utiles, 500 maximum justifié dans la PR ; au-delà, redécouper le ticket.
+**Git** : jamais de commit direct sur `<BRANCHE PRINCIPALE>`. Une branche `issue/N-slug` par ticket, une PR par branche, `Fixes #N` dans le corps de la PR (ou `Refs #N` pour une PR de process sans ticket à fermer). Messages de commit : `feat|fix|chore|polish: description`. **Une seule PR par ticket**, jamais de PR empilées pour un même ticket. **Plafond de diff, par commit** : viser moins de 400 lignes utiles, 500 maximum ; une PR qui dépasse 500 au total se découpe en commits lisibles qui tiennent chacun le plafond, le total justifié dans le corps de la PR. Formatage mécanique et fichiers générés (snapshots de migration, thème généré…) comptés à part ; jamais de compression du code pour tenir le seuil.
 
 ## Garde-fous globaux
 

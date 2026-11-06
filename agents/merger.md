@@ -5,8 +5,8 @@ description: >-
   ou sur une autre branche cible (souvent develop), avec scripts/merge-stack.sh, et résout
   les conflits de rebase quand le script s'arrête. Généraliste : ne dépend d'aucun mode du
   harnais. À déléguer depuis une session CODE ou ORCHESTRATOR, pour une pile seulement
-  (deux PR ou plus) — jamais pour une PR seule —, avec la cible et la pile (numéros dans
-  l'ordre, ou la PR du sommet).
+  (deux PR ou plus, de tickets différents) — jamais pour une PR seule —, avec la cible et
+  la pile (numéros dans l'ordre, ou la PR du sommet).
 tools: Read, Grep, Glob, Edit, Bash
 model: haiku
 effort: medium
